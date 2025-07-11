@@ -129,6 +129,11 @@ script:
 			+ ( if contains(color, match:"black") or contains(cost, match:"B") then "B" else "" )
 			+ ( if contains(color, match:"red") or contains(cost, match:"R") then "R" else "" )
 			+ ( if contains(color, match:"green") or contains(cost, match:"G") then "G" else "" )
+			+ ( if contains(color, match:"purple") or contains(cost, match:"P") then "P" else "" )
+			+ ( if contains(color, match:"yellow") or contains(cost, match:"L") then "L" else "" )
+			+ ( if contains(color, match:"orange") or contains(cost, match:"O") then "O" else "" )
+			+ ( if contains(color, match:"brown") or contains(cost, match:"N") then "N" else "" )
+			+ ( if contains(color, match:"pink") or contains(cost, match:"K") then "K" else "" )
 		)
 	}
 	card_color_1 := { get_card_color(text:card.text, type:card.type, color:card.card_color, cost:card.casting_cost) }
@@ -191,8 +196,8 @@ script:
 	}
 	inline_replacement := replace@(match:"<sym(-auto)?>([^<]+)</sym(-auto)?>", replace:{mana_cost_replacement_css(_2)})
 	mana_cost_replacement := replace@(match:"([+=-])([0-9X])", replace:{ if _2 == "0" or _2 == "=" then "["+_2+"]" else "["+_1+_2+"]"})+
-		replace@(match:"([0-9HWUBRGSCV])/([WUBRGCSV])(/([WUBRGCSV]))?", replace:{"\{"+_1+"/"+_2+_3+"\}"})+
-		replace@(match:"([½∞XYZWUBRGCSTQVJFENAH])", in_context:"(?<![\{[+-])(?<!/)<match>", replace:{"\{"+_1+"\}"})+
+		replace@(match:"([0-9HWUBRGSCV])/([WUBRGPLONKCSV])(/([WUBRGPLONKCSV]))?", replace:{"\{"+_1+"/"+_2+_3+"\}"})+
+		replace@(match:"([½∞XYZWUBRGPLONKCSTQVJFENAH])", in_context:"(?<![\{[+-])(?<!/)<match>", replace:{"\{"+_1+"\}"})+
 		replace@(match:"([1-9]?[0-9]+)", in_context:"(?<![\{[+-])(?<!\\/)<match>", replace:{"\{"+_1+"\}"})+
 		replace@(match:"V", replace:{v_rep("V")})
 	mana_cost_replacement_css := mana_cost_replacement +
@@ -205,11 +210,16 @@ script:
 
 	##Slightly more advanced CI functions to let the exporter detect land types
 	get_land_type_CI := {
-		  (if contains(card.type, match:"Plains") then "W" else "")
+		(if contains(card.type, match:"Plains") then "W" else "")
 		+ (if contains(card.type, match:"Island") then "U" else "")
 		+ (if contains(card.type, match:"Swamp") then "B" else "")
 		+ (if contains(card.type, match:"Mountain") then "R" else "")
 		+ (if contains(card.type, match:"Forest") then "G" else "")
+		+ (if contains(card.type, match:"Cave") then "P" else "")
+		+ (if contains(card.type, match:"Tempest") then "L" else "")
+		+ (if contains(card.type, match:"Dune") then "O" else "")
+		+ (if contains(card.type, match:"Valley") then "N" else "")
+		+ (if contains(card.type, match:"Meadow") then "K" else "")
 	}
 	merge_ci := {
 		base := input
